@@ -1,0 +1,5 @@
+service : {
+  listDesigns: () -> (vec text) query;
+  loadDesign: (text) -> (opt text) query;
+  saveDesign: (text, text) -> ();
+}

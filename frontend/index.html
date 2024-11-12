@@ -1,93 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Design Tool</title>
+    <title>Advanced Design Tool v2</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 toolbar">
+    <div class="app-container">
+        <!-- Top Toolbar -->
+        <div class="top-toolbar">
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="saveBtn" title="Save (Ctrl+S)">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button class="btn btn-icon" id="undoBtn" title="Undo (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="btn btn-icon" id="redoBtn" title="Redo (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="zoomOutBtn">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <span id="zoomLevel">100%</span>
+                <button class="btn btn-icon" id="zoomInBtn">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="gridBtn" title="Toggle Grid (G)">
+                    <i class="fas fa-border-all"></i>
+                </button>
+                <button class="btn btn-icon" id="snapBtn" title="Toggle Snap (S)">
+                    <i class="fas fa-magnet"></i>
+                </button>
+                <button class="btn btn-icon" id="rulersBtn" title="Toggle Rulers (R)">
+                    <i class="fas fa-ruler-combined"></i>
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="darkModeBtn">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="left-sidebar">
                 <div class="tool-section">
-                    <h5>Shapes</h5>
-                    <div class="btn-group-vertical w-100">
-                        <button class="btn btn-outline-primary" id="rectangleBtn"><i class="fas fa-square"></i> Rectangle</button>
-                        <button class="btn btn-outline-primary" id="circleBtn"><i class="fas fa-circle"></i> Circle</button>
-                        <button class="btn btn-outline-primary" id="triangleBtn"><i class="fas fa-play"></i> Triangle</button>
-                        <button class="btn btn-outline-primary" id="starBtn"><i class="fas fa-star"></i> Star</button>
-                        <button class="btn btn-outline-primary" id="lineBtn"><i class="fas fa-minus"></i> Line</button>
+                    <h6>Shapes</h6>
+                    <div class="tool-grid">
+                        <button class="tool-btn" data-shape="rectangle" title="Rectangle (R)">
+                            <i class="fas fa-square"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="circle" title="Circle (C)">
+                            <i class="fas fa-circle"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="triangle" title="Triangle (T)">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="star" title="Star">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="hexagon" title="Hexagon">
+                            <i class="fas fa-hexagon"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="arrow" title="Arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="tool-btn" data-shape="line" title="Line (L)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="tool-btn" data-tool="text" title="Text (T)">
+                            <i class="fas fa-font"></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="tool-section">
-                    <h5>Text</h5>
-                    <button class="btn btn-outline-primary w-100 mb-2" id="textBtn"><i class="fas fa-font"></i> Add Text</button>
-                    <select id="fontFamily" class="form-select mb-2">
-                        <option value="Arial">Arial</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Courier New">Courier New</option>
-                    </select>
-                    <input type="number" id="fontSize" class="form-control mb-2" value="16" min="8" max="72">
-                    <div class="btn-group w-100 mb-2">
-                        <button class="btn btn-outline-secondary" id="alignLeft"><i class="fas fa-align-left"></i></button>
-                        <button class="btn btn-outline-secondary" id="alignCenter"><i class="fas fa-align-center"></i></button>
-                        <button class="btn btn-outline-secondary" id="alignRight"><i class="fas fa-align-right"></i></button>
+                    <h6>Templates</h6>
+                    <div class="template-grid">
+                        <div class="template-item" data-template="social">Social Media</div>
+                        <div class="template-item" data-template="presentation">Presentation</div>
+                        <div class="template-item" data-template="banner">Banner</div>
                     </div>
-                </div>
-
-                <div class="tool-section">
-                    <h5>Style</h5>
-                    <input type="color" id="colorPicker" class="form-control mb-2">
-                    <div class="recent-colors mb-2"></div>
-                    <input type="range" id="opacity" class="form-range" min="0" max="100" value="100">
-                    <label for="opacity">Opacity</label>
-                </div>
-
-                <div class="tool-section">
-                    <h5>Actions</h5>
-                    <div class="btn-group-vertical w-100">
-                        <button class="btn btn-danger" id="deleteBtn"><i class="fas fa-trash"></i> Delete (Del)</button>
-                        <button class="btn btn-secondary" id="duplicateBtn"><i class="fas fa-copy"></i> Duplicate (Ctrl+D)</button>
-                        <button class="btn btn-info" id="bringFrontBtn"><i class="fas fa-level-up-alt"></i> Bring to Front</button>
-                        <button class="btn btn-info" id="sendBackBtn"><i class="fas fa-level-down-alt"></i> Send to Back</button>
-                    </div>
-                </div>
-
-                <div class="tool-section">
-                    <h5>Save/Load</h5>
-                    <input type="text" id="designName" class="form-control mb-2" placeholder="Design name">
-                    <button class="btn btn-success w-100 mb-2" id="saveBtn"><i class="fas fa-save"></i> Save (Ctrl+S)</button>
-                    <button class="btn btn-primary w-100 mb-2" id="exportBtn"><i class="fas fa-file-export"></i> Export</button>
-                    <div id="loadList" class="list-group mt-2"></div>
                 </div>
             </div>
-            <div class="col-md-10">
-                <div class="canvas-controls">
-                    <div class="btn-group">
-                        <button class="btn btn-outline-secondary" id="undoBtn"><i class="fas fa-undo"></i></button>
-                        <button class="btn btn-outline-secondary" id="redoBtn"><i class="fas fa-redo"></i></button>
-                    </div>
-                    <div class="btn-group ms-2">
-                        <button class="btn btn-outline-secondary" id="gridBtn"><i class="fas fa-grid-2"></i></button>
-                        <button class="btn btn-outline-secondary" id="snapBtn"><i class="fas fa-magnet"></i></button>
-                    </div>
-                </div>
+
+            <!-- Main Canvas Area -->
+            <div class="canvas-area">
+                <div class="ruler ruler-h" id="rulerH"></div>
+                <div class="ruler ruler-v" id="rulerV"></div>
                 <div id="canvas-container">
                     <div id="grid-overlay"></div>
+                    <div id="guides-overlay"></div>
                     <div id="design-canvas"></div>
                 </div>
             </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <div class="properties-panel">
+                    <h6>Properties</h6>
+                    <div class="property-group">
+                        <label>Fill</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="fillColor" class="color-picker">
+                            <div class="recent-colors"></div>
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Stroke</label>
+                        <div class="d-flex gap-2">
+                            <input type="color" id="strokeColor" class="color-picker">
+                            <input type="number" id="strokeWidth" class="form-control form-control-sm" value="1" min="0" max="20">
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Opacity</label>
+                        <input type="range" id="opacity" class="form-range" min="0" max="100" value="100">
+                    </div>
+                    <div class="property-group">
+                        <label>Position</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" id="posX" class="form-control form-control-sm" placeholder="X">
+                            <input type="number" id="posY" class="form-control form-control-sm" placeholder="Y">
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Size</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" id="width" class="form-control form-control-sm" placeholder="W">
+                            <input type="number" id="height" class="form-control form-control-sm" placeholder="H">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layers-panel">
+                    <h6>Layers</h6>
+                    <div id="layers-list" class="layers-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Status Bar -->
+        <div class="status-bar">
+            <div class="status-item" id="mousePosition">X: 0 Y: 0</div>
+            <div class="status-item" id="selectedInfo">No selection</div>
+            <div class="status-item" id="canvasSize">1920 x 1080</div>
         </div>
     </div>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div class="menu-item" data-action="cut"><i class="fas fa-cut"></i> Cut</div>
+        <div class="menu-item" data-action="copy"><i class="fas fa-copy"></i> Copy</div>
+        <div class="menu-item" data-action="paste"><i class="fas fa-paste"></i> Paste</div>
+        <div class="menu-item" data-action="delete"><i class="fas fa-trash"></i> Delete</div>
+        <div class="menu-separator"></div>
+        <div class="menu-item" data-action="bringForward"><i class="fas fa-level-up-alt"></i> Bring Forward</div>
+        <div class="menu-item" data-action="sendBackward"><i class="fas fa-level-down-alt"></i> Send Backward</div>
+        <div class="menu-separator"></div>
+        <div class="menu-item" data-action="group"><i class="fas fa-object-group"></i> Group</div>
+        <div class="menu-item" data-action="ungroup"><i class="fas fa-object-ungroup"></i> Ungroup</div>
+    </div>
+
+    <!-- Loading Spinner -->
     <div id="loading" class="loading-spinner">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="notifications"></div>
+
     <script type="module" src="index.js"></script>
 </body>
 </html>

@@ -3,7 +3,9 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface _SERVICE {
-  'listDesigns' : ActorMethod<[], Array<string>>,
+  'deleteDesign' : ActorMethod<[string], boolean>,
+  'getDesignVersion' : ActorMethod<[string], [] | [bigint]>,
+  'listDesigns' : ActorMethod<[], Array<[string, bigint, bigint]>>,
   'loadDesign' : ActorMethod<[string], [] | [string]>,
   'saveDesign' : ActorMethod<[string, string], undefined>,
 }

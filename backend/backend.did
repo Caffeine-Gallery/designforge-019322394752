@@ -1,5 +1,11 @@
 service : {
-  listDesigns: () -> (vec text) query;
+  deleteDesign: (text) -> (bool);
+  getDesignVersion: (text) -> (opt nat) query;
+  listDesigns: () -> (vec record {
+                            text;
+                            int;
+                            nat;
+                          }) query;
   loadDesign: (text) -> (opt text) query;
   saveDesign: (text, text) -> ();
 }

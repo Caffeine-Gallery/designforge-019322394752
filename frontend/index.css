@@ -1,19 +1,63 @@
-.toolbar {
-    background-color: #f8f9fa;
-    padding: 20px;
-    height: 100vh;
-    border-right: 1px solid #dee2e6;
+:root {
+    --toolbar-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --selected-color: #007bff;
 }
 
-.tool-group {
+body {
+    overflow: hidden;
+}
+
+.toolbar {
+    background-color: var(--toolbar-bg);
+    padding: 20px;
+    height: 100vh;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+}
+
+.tool-section {
     margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tool-section:last-child {
+    border-bottom: none;
+}
+
+.tool-section h5 {
+    margin-bottom: 15px;
+    color: #495057;
 }
 
 #canvas-container {
-    height: 100vh;
+    height: calc(100vh - 50px);
     background-color: #fff;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.canvas-controls {
+    height: 50px;
+    padding: 8px;
+    background-color: var(--toolbar-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-image: linear-gradient(#ddd 1px, transparent 1px),
+                      linear-gradient(90deg, #ddd 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.5;
+    display: none;
 }
 
 #design-canvas {
@@ -22,14 +66,84 @@
     position: relative;
 }
 
-.design-element {
+.shape {
     position: absolute;
     cursor: move;
     user-select: none;
 }
 
-.selected {
-    border: 2px dashed #007bff;
+.shape.selected {
+    outline: 2px solid var(--selected-color);
+    outline-offset: 2px;
+}
+
+.shape .rotation-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--selected-color);
+    border-radius: 50%;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    display: none;
+}
+
+.shape.selected .rotation-handle {
+    display: block;
+}
+
+.rectangle {
+    width: 100px;
+    height: 80px;
+}
+
+.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid currentColor;
+}
+
+.star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    width: 80px;
+    height: 80px;
+}
+
+.line {
+    width: 100px;
+    height: 2px;
+}
+
+.text-element {
+    min-width: 50px;
+    min-height: 20px;
+    padding: 5px;
+    cursor: text;
+    white-space: pre-wrap;
+}
+
+.recent-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
 }
 
 .loading-spinner {
@@ -44,18 +158,13 @@
     border-radius: 10px;
 }
 
-.shape {
-    position: absolute;
-    cursor: move;
-}
-
-.rectangle {
-    width: 100px;
-    height: 80px;
-}
-
-.circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+.keyboard-shortcuts {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
 }

@@ -1,23 +1,488 @@
-<!-- Add to the tool-section in left-sidebar -->
-<div class="tool-section">
-    <h6>Drawing Tools</h6>
-    <div class="tool-grid">
-        <button class="tool-btn" data-tool="brush" title="Brush (B)">
-            <i class="fas fa-paint-brush"></i>
-        </button>
-        <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
-            <i class="fas fa-eraser"></i>
-        </button>
-    </div>
-    <div class="brush-settings" style="display: none;">
-        <div class="property-group">
-            <label>Brush Size</label>
-            <input type="range" id="brushSize" class="form-range" min="1" max="50" value="5">
-            <div id="brushPreview" class="brush-preview"></div>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Design Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-item">
+                <span>File</span>
+                <div class="dropdown-menu">
+                    <div class="menu-option" id="newDesign">New Design</div>
+                    <div class="menu-option" id="openDesign">Open...</div>
+                    <div class="menu-option" id="saveDesign">Save</div>
+                    <div class="menu-option" id="saveAsDesign">Save As...</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" id="exportDesign">Export...</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" id="exitApp">Exit</div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span>Edit</span>
+                <div class="dropdown-menu">
+                    <div class="menu-option" id="undo">Undo</div>
+                    <div class="menu-option" id="redo">Redo</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" id="cut">Cut</div>
+                    <div class="menu-option" id="copy">Copy</div>
+                    <div class="menu-option" id="paste">Paste</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" id="selectAll">Select All</div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span>View</span>
+                <div class="dropdown-menu">
+                    <div class="menu-option" id="zoomIn">Zoom In</div>
+                    <div class="menu-option" id="zoomOut">Zoom Out</div>
+                    <div class="menu-option" id="fitScreen">Fit to Screen</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" id="toggleGrid">Show Grid</div>
+                    <div class="menu-option" id="toggleRulers">Show Rulers</div>
+                    <div class="menu-option" id="toggleGuides">Show Guides</div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span>Help</span>
+                <div class="dropdown-menu">
+                    <div class="menu-option" id="tutorials">Tutorials</div>
+                    <div class="menu-option" id="shortcuts">Keyboard Shortcuts</div>
+                    <div class="menu-option" id="about">About</div>
+                </div>
+            </div>
         </div>
-        <div class="property-group">
-            <label>Brush Smoothing</label>
-            <input type="range" id="brushSmoothing" class="form-range" min="0" max="100" value="50">
+
+        <!-- Top Toolbar -->
+        <div class="top-toolbar">
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="saveBtn" title="Save (Ctrl+S)">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button class="btn btn-icon" id="undoBtn" title="Undo (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="btn btn-icon" id="redoBtn" title="Redo (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="selectBtn" title="Select (V)">
+                    <i class="fas fa-mouse-pointer"></i>
+                </button>
+                <button class="btn btn-icon" id="moveBtn" title="Move (M)">
+                    <i class="fas fa-arrows-alt"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <input type="color" id="fillColor" class="color-picker" title="Fill Color">
+                <input type="color" id="strokeColor" class="color-picker" title="Stroke Color">
+                <input type="number" id="strokeWidth" class="number-input" value="1" min="0" max="100" title="Stroke Width">
+            </div>
+
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="alignLeftBtn" title="Align Left">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="btn btn-icon" id="alignCenterBtn" title="Align Center">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button class="btn btn-icon" id="alignRightBtn" title="Align Right">
+                    <i class="fas fa-align-right"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <button class="btn btn-icon" id="bringForwardBtn" title="Bring Forward">
+                    <i class="fas fa-level-up-alt"></i>
+                </button>
+                <button class="btn btn-icon" id="sendBackwardBtn" title="Send Backward">
+                    <i class="fas fa-level-down-alt"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <select id="zoomLevel" class="form-select">
+                    <option value="0.25">25%</option>
+                    <option value="0.5">50%</option>
+                    <option value="0.75">75%</option>
+                    <option value="1" selected>100%</option>
+                    <option value="1.5">150%</option>
+                    <option value="2">200%</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="left-sidebar">
+                <!-- Tools Panel -->
+                <div class="panel">
+                    <div class="panel-header">Tools</div>
+                    <div class="panel-content">
+                        <div class="tool-grid">
+                            <button class="tool-btn" data-tool="select" title="Select (V)">
+                                <i class="fas fa-mouse-pointer"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="rectangle" title="Rectangle (R)">
+                                <i class="fas fa-square"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="circle" title="Circle (C)">
+                                <i class="fas fa-circle"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="line" title="Line (L)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="text" title="Text (T)">
+                                <i class="fas fa-font"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="pen" title="Pen (P)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="brush" title="Brush (B)">
+                                <i class="fas fa-paint-brush"></i>
+                            </button>
+                            <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shapes Panel -->
+                <div class="panel">
+                    <div class="panel-header">Shapes</div>
+                    <div class="panel-content">
+                        <div class="shape-grid">
+                            <div class="shape-item" data-shape="rectangle"></div>
+                            <div class="shape-item" data-shape="circle"></div>
+                            <div class="shape-item" data-shape="triangle"></div>
+                            <div class="shape-item" data-shape="star"></div>
+                            <div class="shape-item" data-shape="hexagon"></div>
+                            <div class="shape-item" data-shape="arrow"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Panel -->
+                <div class="panel">
+                    <div class="panel-header">Templates</div>
+                    <div class="panel-content">
+                        <div class="template-grid">
+                            <div class="template-item" data-template="social">
+                                <img src="templates/social.png" alt="Social Media">
+                                <span>Social Media</span>
+                            </div>
+                            <div class="template-item" data-template="presentation">
+                                <img src="templates/presentation.png" alt="Presentation">
+                                <span>Presentation</span>
+                            </div>
+                            <div class="template-item" data-template="poster">
+                                <img src="templates/poster.png" alt="Poster">
+                                <span>Poster</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Canvas Area -->
+            <div class="canvas-area">
+                <div class="ruler ruler-h" id="rulerH"></div>
+                <div class="ruler ruler-v" id="rulerV"></div>
+                <div id="canvas-container">
+                    <div id="grid-overlay"></div>
+                    <div id="guides-overlay"></div>
+                    <canvas id="drawing-canvas"></canvas>
+                    <div id="design-canvas"></div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Properties Panel -->
+                <div class="panel">
+                    <div class="panel-header">Properties</div>
+                    <div class="panel-content">
+                        <div class="property-group">
+                            <label>Position</label>
+                            <div class="input-group">
+                                <input type="number" id="posX" class="form-control" placeholder="X">
+                                <input type="number" id="posY" class="form-control" placeholder="Y">
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <label>Size</label>
+                            <div class="input-group">
+                                <input type="number" id="width" class="form-control" placeholder="W">
+                                <input type="number" id="height" class="form-control" placeholder="H">
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <label>Rotation</label>
+                            <input type="number" id="rotation" class="form-control" value="0">
+                        </div>
+                        <div class="property-group">
+                            <label>Opacity</label>
+                            <input type="range" id="opacity" class="form-range" min="0" max="100" value="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Styles Panel -->
+                <div class="panel">
+                    <div class="panel-header">Styles</div>
+                    <div class="panel-content">
+                        <div class="property-group">
+                            <label>Fill</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="fillColor" class="color-picker">
+                                <div class="recent-colors"></div>
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <label>Stroke</label>
+                            <div class="input-group">
+                                <input type="color" id="strokeColor" class="color-picker">
+                                <input type="number" id="strokeWidth" class="form-control" value="1">
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <label>Shadow</label>
+                            <div class="shadow-controls">
+                                <input type="color" id="shadowColor" class="color-picker">
+                                <input type="range" id="shadowBlur" class="form-range" min="0" max="50" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layers Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Layers</span>
+                        <div class="panel-actions">
+                            <button class="btn btn-sm" id="addLayerBtn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="btn btn-sm" id="deleteLayerBtn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div id="layers-list" class="layers-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item" id="mousePosition">X: 0 Y: 0</div>
+            <div class="status-item" id="selectedInfo">No selection</div>
+            <div class="status-item" id="canvasSize">1920 x 1080</div>
         </div>
     </div>
-</div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="newDesignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Design</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Width</label>
+                        <input type="number" class="form-control" id="newDesignWidth" value="1920">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Height</label>
+                        <input type="number" class="form-control" id="newDesignHeight" value="1080">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="createNewDesign">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exportModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Design</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Format</label>
+                        <select class="form-select" id="exportFormat">
+                            <option value="png">PNG</option>
+                            <option value="jpg">JPG</option>
+                            <option value="svg">SVG</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quality</label>
+                        <input type="range" class="form-range" id="exportQuality" min="1" max="100" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="exportBtn">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div class="modal fade" id="shortcutsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Keyboard Shortcuts</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="shortcuts-grid">
+                        <!-- File Operations -->
+                        <div class="shortcuts-section">
+                            <h6>File Operations</h6>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + N</span>
+                                <span class="shortcut-desc">New Design</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + O</span>
+                                <span class="shortcut-desc">Open Design</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + S</span>
+                                <span class="shortcut-desc">Save Design</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + Shift + S</span>
+                                <span class="shortcut-desc">Save As</span>
+                            </div>
+                        </div>
+
+                        <!-- Edit Operations -->
+                        <div class="shortcuts-section">
+                            <h6>Edit Operations</h6>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + Z</span>
+                                <span class="shortcut-desc">Undo</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + Y</span>
+                                <span class="shortcut-desc">Redo</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + X</span>
+                                <span class="shortcut-desc">Cut</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + C</span>
+                                <span class="shortcut-desc">Copy</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + V</span>
+                                <span class="shortcut-desc">Paste</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Delete</span>
+                                <span class="shortcut-desc">Delete Selected</span>
+                            </div>
+                        </div>
+
+                        <!-- Tools -->
+                        <div class="shortcuts-section">
+                            <h6>Tools</h6>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">V</span>
+                                <span class="shortcut-desc">Select Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">M</span>
+                                <span class="shortcut-desc">Move Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">R</span>
+                                <span class="shortcut-desc">Rectangle Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">C</span>
+                                <span class="shortcut-desc">Circle Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">T</span>
+                                <span class="shortcut-desc">Text Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">B</span>
+                                <span class="shortcut-desc">Brush Tool</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">E</span>
+                                <span class="shortcut-desc">Eraser Tool</span>
+                            </div>
+                        </div>
+
+                        <!-- View -->
+                        <div class="shortcuts-section">
+                            <h6>View</h6>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + +</span>
+                                <span class="shortcut-desc">Zoom In</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + -</span>
+                                <span class="shortcut-desc">Zoom Out</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + 0</span>
+                                <span class="shortcut-desc">Reset Zoom</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + R</span>
+                                <span class="shortcut-desc">Toggle Rulers</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + G</span>
+                                <span class="shortcut-desc">Toggle Grid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="notifications"></div>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
